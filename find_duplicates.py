@@ -33,7 +33,10 @@ if __name__ == '__main__':
 
   for key, img_list in images
     if img_list.__len__() > 1:
-      new_name = os.path.join(img_list[0].root, img_list[0].file)
-      for i in img_list:
-        old_name = os.path.join(i.root, i.file)
+      i = 0
+      for img in img_list:
+        old_name = os.path.join(img.root, img.file)
+        new_name = os.path.join(img_list[0].root, rename_duplicate(img_list[0].file, i)
+        i += 1
         os.rename(old_name, new_name)
+  
