@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-<<<<<<< HEAD
 import os
 import imagehash
 import argparse
@@ -9,11 +8,6 @@ class FullPaths(argparse.Action):
     """Expand user- and relative-paths"""
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, os.path.abspath(os.path.expanduser(values)))
-=======
-import os, imagehash, argparse
-from PIL import Image
-from collections import namedtuple
->>>>>>> 7dc8e70dd14a4c4c05b8442f554ea5ada03641c0
 
 # code example taken from (with minor changes):
 # http://stackoverflow.com/questions/22635675/use-dictionary-for-python-argparse
@@ -35,10 +29,11 @@ if __name__ == '__main__':
                       action=FullPaths,
                       help='path to the directory')
 
-  parser.add_argument('hashing', 
+  parser.add_argument('--hashing',
+                      nargs='?', 
                       action=DictAction, 
                       choices=['ahash','phash','dhash','whash-haar','whash-db4'],
-                      default='dhash', 
+                      default=imagehash.dhash, 
                       help='method of image hashing')
 
   args = parser.parse_args()
@@ -48,7 +43,7 @@ if __name__ == '__main__':
 
   import time
   start_time = time.time()
-  print("hasing images...")
+  print("hasing images...")#signal to the console
 
   for root, dirs, files in os.walk(args.path):
     for file in files:
@@ -58,7 +53,7 @@ if __name__ == '__main__':
              #grouping images with similar hash
              images.setdefault(imghash, []).append(path_to_file)
 
-  print("done in {0:.2f}s\nprinting output...".format(time.time() - start_time))
+  print("done in {0:.2f}s\nprinting output...".format(time.time() - start_time))#finish output to console
 
   for key, img_list in images.items():
     if img_list.__len__() > 1:
@@ -69,4 +64,3 @@ if __name__ == '__main__':
       div = ["├──"] * (length - 1) + ["└──"]
       for output in list(zip(div, img_list)):
         print("    {} {}".format(*output))
-
