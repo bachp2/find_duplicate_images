@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-<<<<<<< HEAD
 import os
 import imagehash
 import argparse
@@ -9,12 +8,7 @@ class FullPaths(argparse.Action):
     """Expand user- and relative-paths"""
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, os.path.abspath(os.path.expanduser(values)))
-=======
-import os, imagehash, argparse
-from PIL import Image
-from collections import namedtuple
->>>>>>> 7dc8e70dd14a4c4c05b8442f554ea5ada03641c0
-
+        
 # code example taken from (with minor changes):
 # http://stackoverflow.com/questions/22635675/use-dictionary-for-python-argparse
 class DictAction(argparse.Action):
