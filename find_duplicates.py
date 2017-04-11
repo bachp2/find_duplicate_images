@@ -42,7 +42,8 @@ if __name__ == '__main__':
   for key, img_list in images
     if img_list.__len__() > 1:
       length = img_list.__len__()
-      print("    Total: {}".format(length))
+      print("    hash: {}".format(key))
+      print("    {} similar images:".format(length))
       div = ["├──"] * (length - 1) + ["└──"]
       for output in list(zip(div, img_list)):
         print("    {} {}".format(*output))
