@@ -29,7 +29,7 @@ if __name__ == '__main__':
                       action=FullPaths,
                       help='path to the directory')
 
-  parser.add_argument('--hashing',
+  parser.add_argument('hashing',
                       nargs='?', 
                       action=DictAction, 
                       choices=['ahash','phash','dhash','whash-haar','whash-db4'],
