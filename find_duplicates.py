@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os, imagehash, argparse
 from PIL import Image
 from collections import namedtuple
