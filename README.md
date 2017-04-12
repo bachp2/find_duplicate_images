@@ -1,1 +1,1 @@
-# find_duplicate_images
+this Python script finds all duplicate images and print them to the console.
