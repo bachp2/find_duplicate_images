@@ -33,7 +33,7 @@ if __name__ == '__main__':
                       nargs='?', 
                       action=DictAction, 
                       choices=['ahash','phash','dhash','whash-haar','whash-db4'],
-                      default=imagehash.dhash, 
+                      default='dhash', 
                       help='method of image hashing')
 
   args = parser.parse_args()
@@ -42,8 +42,12 @@ if __name__ == '__main__':
   images = {} #store every images of directory, group images with similar hash into the same list
 
   import time
-  start_time = time.time()
-  print("hasing images...")#signal to the console
+
+  ##################################
+  start = time.time()#start counting
+  ##################################
+
+  print("hashing images...")#signal to the console
 
   for root, dirs, files in os.walk(args.path):
     for file in files:
@@ -53,14 +57,30 @@ if __name__ == '__main__':
              #grouping images with similar hash
              images.setdefault(imghash, []).append(path_to_file)
 
-  print("done in {0:.2f}s\nprinting output...".format(time.time() - start_time))#finish output to console
+  print("printing output...")#finish output to console
 
-  for key, img_list in images.items():
-    if img_list.__len__() > 1:
-      print()
+  img_set = {k: v for k, v in images.items() if v.__len__() > 1}
+  
+  out = ""
+  start_time = time.time()
+  for key, img_list in img_set.items():
+      out+="\n"
       length = img_list.__len__()
-      print("    hash: {}".format(key))
-      print("    {} similar images:".format(length))
+      out+="    hash: {}\n".format(key)
+      out+="    {} similar images:\n".format(length)
       div = ["├──"] * (length - 1) + ["└──"]
       for output in list(zip(div, img_list)):
-        print("    {} {}".format(*output))
+        out+="    {} {}\n".format(*output)
+  
+  '''
+    check if string is empty
+    return true if not empty false otherwise
+  '''
+  def isNotEmpty(s):
+    return bool(str(s) and str(s).strip())
+
+  if isNotEmpty(out):
+    print(out)
+  else: 
+    print("no duplicates found")
+  print("done in {0:.2f}s".format(time.time() - start)) 
