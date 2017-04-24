@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 import os
 import imagehash
 import argparse
@@ -81,6 +82,27 @@ if __name__ == '__main__':
 
   if isNotEmpty(out):
     print(out)
+    print()
+    print("done in {0:.2f}s".format(time.time() - start))
   else: 
     print("no duplicates found")
-  print("done in {0:.2f}s".format(time.time() - start)) 
+    print("done in {0:.2f}s".format(time.time() - start))
+    quit()
+
+  temp_dir = os.path.join(args.path, "tmp")
+  os.rmdir(temp_dir)
+  if not os.path.exists(temp_dir):
+    os.makedirs(temp_dir)
+  else: 
+    raise IOError("'tmp' folder is not empty in the working directory")
+
+  #move duplicate images to temp folder
+  for key, img_list in img_set.items():
+    for image in img_list:
+      file = os.path.split(image)[1]
+      old_path = image
+      new_path = os.path.join(temp_dir, file)
+      os.rename(old_path, new_path)
+  print("moved duplicates to {0}".format(temp_dir))
+  print("relocate any false positives from 'tmp' directory before bulk deleting!")
+  print()
