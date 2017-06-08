@@ -83,43 +83,37 @@ if __name__ == '__main__':
     _fromUtf8 = lambda s: s
 
   #Class for GUI
-  class Window(Ui_MainWindow):
-  def __init__(self):
-    super(Window,self).__init__()
-    self.setupUi(self)
-    self.setWindowTitle("find-image-duplicates")
-    self.setWindowIcon(QtGui.QIcon('logo.png'))
-    self.listWidget.setViewMode(QtGui.QListView.IconMode)
-    
-  def home(self):
-    #button
-    btn = QtGui.QPushButton("bulk delete", self)
-    btn.clicked.connect(self.delete)
-    btn.resize(btn.sizeHint())
-    btn.move(400,300)
-    for key, img_list in img_set.items():
-      for i in img_list:
-        item = QtGui.QListWidgetItem()
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(i)), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        item.setIcon(icon)
-        self.listWidget.addItem(item)
-    self.show()
-  
-  def delete(self):
-    print("checked!!")
+  class Window(QtGui.QMainWindow, Ui_MainWindow):
+    def __init__(self):
+      super(Window,self).__init__()
+      self.setupUi(self)
+      self.listWidget.setViewMode(QtGui.QListView.IconMode)
+      self.home()
 
-  def divider(self):
-    item = QtGui.QListWidgetItem()
-    item.setSizeHint()
-    item.setFlags(Qt::NoItemFlags)
+    def home(self):
+      for key, img_list in img_set.items():
+        for i in img_list:
+          item = QtGui.QListWidgetItem()
+          icon = QtGui.QIcon()
+          icon.addPixmap(QtGui.QPixmap(_fromUtf8(i)), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+          item.setIcon(icon)
+          self.listWidget.addItem(item)
+      self.show()
     
-  def run():
-    app = QtGui.QApplication(sys.argv)
-    GUI = Window()
-    GUI.home()
-    sys.exit(app.exec_())
-    #adds item to ListView
+    def delete(self):
+      print("checked!!")
+    def refresh(self):
+      print("checked!")
+    def divider(self):
+      item = QtGui.QListWidgetItem()
+      item.setSizeHint()
+      item.setFlags(Qt.NoItemFlags)
+      
+    def run():
+      app = QtGui.QApplication(sys.argv)
+      GUI = Window()
+      sys.exit(app.exec_())
+      #adds item to ListWidget
 
   '''
     check if string is empty
@@ -132,6 +126,7 @@ if __name__ == '__main__':
     print(out)
     print()
     print("done in {0:.2f}s".format(time.time() - start))
+    Window.run()
   else: 
     print("no duplicates found")
     print("done in {0:.2f}s".format(time.time() - start))

@@ -50,7 +50,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
+        MainWindow.setWindowTitle(_translate("MainWindow", "find-duplicates", None))
         self.pushButton.setText(_translate("MainWindow", "Bulk Delete!", None))
         self.pushButton_2.setText(_translate("MainWindow", "Refresh", None))
 
@@ -63,4 +63,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-
