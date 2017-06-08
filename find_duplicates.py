@@ -5,6 +5,7 @@ import imagehash
 import argparse
 from PIL import Image #update to 3.6.1 to run properly
 from PyQt4 import QtGui, QtCore 
+from gui_widget import Ui_MainWindow
 
 class FullPaths(argparse.Action):
     """Expand user- and relative-paths"""
@@ -82,13 +83,12 @@ if __name__ == '__main__':
     _fromUtf8 = lambda s: s
 
   #Class for GUI
-  class Window(QtGui.QMainWindow):
+  class Window(Ui_MainWindow):
   def __init__(self):
     super(Window,self).__init__()
-    self.resize(500,350)
+    self.setupUi(self)
     self.setWindowTitle("find-image-duplicates")
     self.setWindowIcon(QtGui.QIcon('logo.png'))
-    listWidget = QtGui.QListWidget(self)
     self.listWidget.setViewMode(QtGui.QListView.IconMode)
     
   def home(self):
@@ -109,6 +109,11 @@ if __name__ == '__main__':
   def delete(self):
     print("checked!!")
 
+  def divider(self):
+    item = QtGui.QListWidgetItem()
+    item.setSizeHint()
+    item.setFlags(Qt::NoItemFlags)
+    
   def run():
     app = QtGui.QApplication(sys.argv)
     GUI = Window()
