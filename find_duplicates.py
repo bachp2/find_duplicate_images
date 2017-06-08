@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
-import os
+import os, sys
 import imagehash
 import argparse
 from PIL import Image #update to 3.6.1 to run properly
+from PyQt4 import QtGui, QtCore 
 
 class FullPaths(argparse.Action):
     """Expand user- and relative-paths"""
@@ -24,6 +25,7 @@ class DictAction(argparse.Action):
         setattr(namespace, self.dest, methods.get(values))
         
 if __name__ == '__main__':
+
   parser = argparse.ArgumentParser(description='find duplicate images in a specified directory')
 
   parser.add_argument('path',
@@ -36,7 +38,6 @@ if __name__ == '__main__':
                       choices=['ahash','phash','dhash','whash-haar','whash-db4'],
                       default='dhash', 
                       help='method of image hashing')
-
   args = parser.parse_args()
 
   ext = [".png", ".jpg", ".jpeg", ".bmp", ".gif"] #file extensions
@@ -64,6 +65,8 @@ if __name__ == '__main__':
   
   out = ""
   start_time = time.time()
+  
+  #print list to console
   for key, img_list in img_set.items():
       out+="\n"
       length = img_list.__len__()
@@ -72,6 +75,49 @@ if __name__ == '__main__':
       div = ["├──"] * (length - 1) + ["└──"]
       for output in list(zip(div, img_list)):
         out+="    {} {}\n".format(*output)
+
+  try:
+    _fromUtf8 = QtCore.QString.fromUtf8
+  except AttributeError:
+    _fromUtf8 = lambda s: s
+
+  #Class for GUI
+  class Window(QtGui.QMainWindow):
+  def __init__(self):
+    super(Window,self).__init__()
+    self.resize(500,350)
+    self.setWindowTitle("find-image-duplicates")
+    self.setWindowIcon(QtGui.QIcon('logo.png'))
+    listWidget = QtGui.QListWidget(self)
+    self.listWidget.setViewMode(QtGui.QListView.IconMode)
+    
+  def home(self):
+    #button
+    btn = QtGui.QPushButton("bulk delete", self)
+    btn.clicked.connect(self.delete)
+    btn.resize(btn.sizeHint())
+    btn.move(400,300)
+    for key, img_list in img_set.items():
+      for i in img_list:
+        item = QtGui.QListWidgetItem()
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(i)), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        item.setIcon(icon)
+        self.listWidget.addItem(item)
+    self.show()
+  
+  def delete(self):
+    print("checked!!")
+
+  def run():
+    app = QtGui.QApplication(sys.argv)
+    GUI = Window()
+    GUI.home()
+    sys.exit(app.exec_())
+    #adds item to ListView
+
+  
+
   
   '''
     check if string is empty
@@ -89,20 +135,3 @@ if __name__ == '__main__':
     print("done in {0:.2f}s".format(time.time() - start))
     quit()
 
-  temp_dir = os.path.join(args.path, "tmp")
-  os.rmdir(temp_dir)
-  if not os.path.exists(temp_dir):
-    os.makedirs(temp_dir)
-  else: 
-    raise IOError("'tmp' folder is not empty in the working directory")
-
-  #move duplicate images to temp folder
-  for key, img_list in img_set.items():
-    for image in img_list:
-      file = os.path.split(image)[1]
-      old_path = image
-      new_path = os.path.join(temp_dir, file)
-      os.rename(old_path, new_path)
-  print("moved duplicates to {0}".format(temp_dir))
-  print("relocate any false positives from 'tmp' directory before bulk deleting!")
-  print()
