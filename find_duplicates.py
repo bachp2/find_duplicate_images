@@ -88,6 +88,7 @@ if __name__ == '__main__':
       super(Window,self).__init__()
       self.setupUi(self)
       self.listWidget.setViewMode(QtGui.QListView.IconMode)
+      self.listWidget.setIconSize(QtCore.QSize(96,110))
       self.home()
 
     def home(self):
