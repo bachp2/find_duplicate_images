@@ -116,9 +116,6 @@ if __name__ == '__main__':
     sys.exit(app.exec_())
     #adds item to ListView
 
-  
-
-  
   '''
     check if string is empty
     return true if not empty false otherwise
