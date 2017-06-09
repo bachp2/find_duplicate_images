@@ -88,27 +88,37 @@ if __name__ == '__main__':
       super(Window,self).__init__()
       self.setupUi(self)
       self.listWidget.setViewMode(QtGui.QListView.IconMode)
-      self.listWidget.setIconSize(QtCore.QSize(96,110))
+      #self.listWidget.setIconSize(QtCore.QSize(96,110))
       self.home()
 
     def home(self):
       for key, img_list in img_set.items():
+        self.divider()
         for i in img_list:
           item = QtGui.QListWidgetItem()
           icon = QtGui.QIcon()
           icon.addPixmap(QtGui.QPixmap(_fromUtf8(i)), QtGui.QIcon.Normal, QtGui.QIcon.Off)
           item.setIcon(icon)
+          item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+          item.setCheckState(QtCore.Qt.Unchecked)
           self.listWidget.addItem(item)
+      self.divider()
       self.show()
-    
+
     def delete(self):
       print("checked!!")
     def refresh(self):
       print("checked!")
     def divider(self):
       item = QtGui.QListWidgetItem()
-      item.setSizeHint()
-      item.setFlags(Qt.NoItemFlags)
+      item.setSizeHint(QtCore.QSize(601,5))
+      item.setFlags(QtCore.Qt.NoItemFlags)
+      self.listWidget.addItem(item)
+      frame = QtGui.QFrame()
+      frame.setFrameShape(QtGui.QFrame.HLine)
+      frame.setFrameShadow(QtGui.QFrame.Raised)
+      frame.setLineWidth(2)
+      self.listWidget.setItemWidget(item, frame)
       
     def run():
       app = QtGui.QApplication(sys.argv)
