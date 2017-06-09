@@ -88,21 +88,23 @@ if __name__ == '__main__':
       super(Window,self).__init__()
       self.setupUi(self)
       self.listWidget.setViewMode(QtGui.QListView.IconMode)
-      #self.listWidget.setIconSize(QtCore.QSize(96,110))
+      self.listWidget.setIconSize(QtCore.QSize(42,48))
       self.home()
 
     def home(self):
       for key, img_list in img_set.items():
         self.divider()
-        for i in img_list:
+        for i in range(len(img_list)):
           item = QtGui.QListWidgetItem()
           icon = QtGui.QIcon()
-          icon.addPixmap(QtGui.QPixmap(_fromUtf8(i)), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+          icon.addPixmap(QtGui.QPixmap(_fromUtf8(img_list[i])), QtGui.QIcon.Normal, QtGui.QIcon.Off)
           item.setIcon(icon)
-          item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-          item.setCheckState(QtCore.Qt.Unchecked)
+          item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled) 
+          if i != 0:
+            item.setCheckState(QtCore.Qt.Checked)
+          else:
+            item.setCheckState(QtCore.Qt.Unchecked)
           self.listWidget.addItem(item)
-      self.divider()
       self.show()
 
     def delete(self):
