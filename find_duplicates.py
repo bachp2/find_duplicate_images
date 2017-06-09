@@ -93,7 +93,6 @@ if __name__ == '__main__':
 
     def home(self):
       for key, img_list in img_set.items():
-        self.divider()
         for i in range(len(img_list)):
           item = QtGui.QListWidgetItem()
           icon = QtGui.QIcon()
@@ -105,11 +104,12 @@ if __name__ == '__main__':
           else:
             item.setCheckState(QtCore.Qt.Unchecked)
           self.listWidget.addItem(item)
+        self.divider()
       self.show()
 
     def delete(self):
-      print("checked!!")
-    def refresh(self):
+      
+    def exit(self):
       print("checked!")
     def divider(self):
       item = QtGui.QListWidgetItem()
@@ -124,6 +124,10 @@ if __name__ == '__main__':
       
     def run():
       app = QtGui.QApplication(sys.argv)
+      msg_box = QtGui.QMessageBox()
+      msg_box.setText("Check for any false positives before deleting!")
+      msg_box.setWindowTitle("Warning")
+      msg_box.show()
       GUI = Window()
       sys.exit(app.exec_())
       #adds item to ListWidget
