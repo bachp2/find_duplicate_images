@@ -84,13 +84,14 @@ if __name__ == '__main__':
 
   #Class for GUI
   class Window(QtGui.QMainWindow, Ui_MainWindow):
+    #set item to path file
+    path_2_item = {}
     def __init__(self):
       super(Window,self).__init__()
       self.setupUi(self)
       self.listWidget.setViewMode(QtGui.QListView.IconMode)
       self.listWidget.setIconSize(QtCore.QSize(42,48))
       self.home()
-
     def home(self):
       for key, img_list in img_set.items():
         for i in range(len(img_list)):
@@ -103,12 +104,20 @@ if __name__ == '__main__':
             item.setCheckState(QtCore.Qt.Checked)
           else:
             item.setCheckState(QtCore.Qt.Unchecked)
+          self.path_2_item[str(item)] = img_list[i]
           self.listWidget.addItem(item)
         self.divider()
+      self.pushButton.clicked.connect(self.delete)
+      self.pushButton_2.clicked.connect(QtCore.QCoreApplication.instance().quit)
       self.show()
-
     def delete(self):
-      
+      for i in range(self.listWidget.count()):
+        curr = self.listWidget.item(i)
+        if curr.checkState() == 2:
+          print(self.path_2_item[str(curr)])
+          os.remove(self.path_2_item[str(curr)])
+          self.listWidget.takeItem(i)
+      self.listWidget.show()
     def exit(self):
       print("checked!")
     def divider(self):
