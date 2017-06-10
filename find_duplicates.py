@@ -123,7 +123,7 @@ if __name__ == '__main__':
         if curr.checkState() == QtCore.Qt.Checked:
           checked_item_index.append(i)
         else: unchecked_item_index.append(i)
-      #testalgo
+      #-->testalgo
       self.indexing_help(checked_item_index, unchecked_item_index)
       #remove checked items with correct index
       for i in checked_item_index:
@@ -186,4 +186,3 @@ if __name__ == '__main__':
     print("no duplicates found")
     print("done in {0:.2f}s".format(time.time() - start))
     quit()
-
