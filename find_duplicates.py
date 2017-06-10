@@ -5,7 +5,7 @@ import imagehash
 import argparse
 from PIL import Image #update to 3.6.1 to run properly
 from PyQt4 import QtGui, QtCore 
-from gui_widget import Ui_MainWindow
+from gui_widget import Ui_Window
 
 class FullPaths(argparse.Action):
     """Expand user- and relative-paths"""
@@ -83,7 +83,7 @@ if __name__ == '__main__':
     _fromUtf8 = lambda s: s
 
   #Class for GUI
-  class Window(QtGui.QMainWindow, Ui_MainWindow):
+  class Window(QtGui.QMainWindow, Ui_Window):
     #set item to path file
     path_2_item = {}
     def __init__(self):
@@ -107,17 +107,45 @@ if __name__ == '__main__':
           self.path_2_item[str(item)] = img_list[i]
           self.listWidget.addItem(item)
         self.divider()
+      
       self.pushButton.clicked.connect(self.delete)
       self.pushButton_2.clicked.connect(QtCore.QCoreApplication.instance().quit)
       self.show()
     def delete(self):
+      #BEGIN
+      checked_item_index = [] # checked items, first list
+      unchecked_item_index = [] # unchecked items and frames, second list
+      
+      #appending indexes of checked and unchecked items
       for i in range(self.listWidget.count()):
         curr = self.listWidget.item(i)
-        if curr.checkState() == 2:
-          print(self.path_2_item[str(curr)])
-          os.remove(self.path_2_item[str(curr)])
-          self.listWidget.takeItem(i)
-      self.listWidget.show()
+        if curr.checkState() == QtCore.Qt.Checked:
+          checked_item_index.append(i)
+        else: unchecked_item_index.append(i)
+      #testalgo
+      self.indexing_help(checked_item_index, unchecked_item_index)
+      #remove checked items with correct index
+      for i in checked_item_index:
+        curr = self.listWidget.item(i)
+        print(self.path_2_item[str(curr)])
+        os.remove(self.path_2_item[str(curr)])
+        self.listWidget.takeItem(i)
+      #END METHOD
+    def indexing_help(self, list1, list2):
+      count = 0
+      ##BEGIN
+      for e in range(len(list1)):
+        for m in range(len(list2)):
+          if list1[e] < list2[m]:
+            list1[e] = count
+            break
+          else: 
+            if count == len(list2)-1:
+              list1[e] = count+1
+              break
+            else: count = count+1
+        count = 0
+      #END LOOP
     def exit(self):
       print("checked!")
     def divider(self):

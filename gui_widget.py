@@ -22,44 +22,48 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(681, 496)
-        self.centralwidget = QtGui.QWidget(MainWindow)
+class Ui_Window(object):
+    def setupUi(self, Window):
+        Window.setObjectName(_fromUtf8("Window"))
+        Window.resize(484, 340)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8("logo.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Window.setWindowIcon(icon)
+        self.centralwidget = QtGui.QWidget(Window)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.listWidget = QtGui.QListWidget(self.centralwidget)
-        self.listWidget.setGeometry(QtCore.QRect(40, 20, 601, 371))
+        self.listWidget.setGeometry(QtCore.QRect(40, 20, 391, 241))
         self.listWidget.setObjectName(_fromUtf8("listWidget"))
         self.pushButton = QtGui.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(480, 400, 75, 23))
+        self.pushButton.setGeometry(QtCore.QRect(270, 270, 75, 23))
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
         self.pushButton_2 = QtGui.QPushButton(self.centralwidget)
-        self.pushButton_2.setGeometry(QtCore.QRect(570, 400, 75, 23))
+        self.pushButton_2.setGeometry(QtCore.QRect(360, 270, 75, 23))
         self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 681, 18))
+        Window.setCentralWidget(self.centralwidget)
+        self.menubar = QtGui.QMenuBar(Window)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 484, 18))
         self.menubar.setObjectName(_fromUtf8("menubar"))
-        MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtGui.QStatusBar(MainWindow)
+        Window.setMenuBar(self.menubar)
+        self.statusbar = QtGui.QStatusBar(Window)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
-        MainWindow.setStatusBar(self.statusbar)
+        Window.setStatusBar(self.statusbar)
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.retranslateUi(Window)
+        QtCore.QMetaObject.connectSlotsByName(Window)
 
-    def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "find-duplicates", None))
-        self.pushButton.setText(_translate("MainWindow", "Bulk Delete!", None))
-        self.pushButton_2.setText(_translate("MainWindow", "Refresh", None))
+    def retranslateUi(self, Window):
+        Window.setWindowTitle(_translate("Window", "find-duplicates", None))
+        self.pushButton.setText(_translate("Window", "Bulk Delete!", None))
+        self.pushButton_2.setText(_translate("Window", "Quit", None))
 
 
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
-    MainWindow = QtGui.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
+    Window = QtGui.QMainWindow()
+    ui = Ui_Window()
+    ui.setupUi(Window)
+    Window.show()
     sys.exit(app.exec_())
+
