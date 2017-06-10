@@ -99,7 +99,8 @@ if __name__ == '__main__':
           icon = QtGui.QIcon()
           icon.addPixmap(QtGui.QPixmap(_fromUtf8(img_list[i])), QtGui.QIcon.Normal, QtGui.QIcon.Off)
           item.setIcon(icon)
-          item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled) 
+          item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+          item.setText(str(i+1))
           if i != 0:
             item.setCheckState(QtCore.Qt.Checked)
           else:
