@@ -4,7 +4,7 @@ list2 = [0,3,4,5,9,10,13]
 # A problem with deleting multiple items from qlistwidget using QListWidget.takeItem is that 
 # the index of each item will change relative to the deleted position, thus making a for loop for deletion impossible.
 # A solution for this problem is using this algo to find the the correct position of item's index with each deletion. 
-# To understand the algo, notice that the new position will tends to 0 as each deletion from the chain. However, we have checked items as
+# To understand the algo, notice that the new position will tends to 0 as each deletion from the chain since we are removing it sequentially. However, we have checked items as
 # well as unchecked items, thus, the item's new position will tend to the closest uncheckable items (lower in index) relative to the 
 # item's current position.
 
