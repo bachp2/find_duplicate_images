@@ -66,7 +66,6 @@ if __name__ == '__main__':
   img_set = {k: v for k, v in images.items() if v.__len__() > 1}
   
   out = ""
-  start_time = time.time()
   
   #print list to console
   for key, img_list in img_set.items():
