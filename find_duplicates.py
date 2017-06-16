@@ -27,8 +27,9 @@ class DictAction(argparse.Action):
         
 if __name__ == '__main__':
 
+  #descripton
   parser = argparse.ArgumentParser(description='find duplicate images in a specified directory')
-
+  #arguments
   parser.add_argument('path',
                       action=FullPaths,
                       help='path to the directory')
@@ -40,9 +41,9 @@ if __name__ == '__main__':
                       default='dhash', 
                       help='method of image hashing')
   args = parser.parse_args()
-
+  #extension names
   ext = [".png", ".jpg", ".jpeg", ".bmp", ".gif"] #file extensions
-  images = {} #store every images of directory, group images with similar hash into the same list
+  images = {} #store every duplicates images in the directory, then group images with similar hash into the same list
 
   import time
 
@@ -92,6 +93,7 @@ if __name__ == '__main__':
       self.listWidget.setViewMode(QtGui.QListView.IconMode)
       self.listWidget.setIconSize(QtCore.QSize(42,48))
       self.home()
+
     def home(self):
       for key, img_list in img_set.items():
         for i in range(len(img_list)):
@@ -112,6 +114,7 @@ if __name__ == '__main__':
       self.pushButton.clicked.connect(self.delete)
       self.pushButton_2.clicked.connect(QtCore.QCoreApplication.instance().quit)
       self.show()
+
     def delete(self):
       #BEGIN
       checked_item_index = [] # checked items, first list
@@ -143,8 +146,7 @@ if __name__ == '__main__':
           else: count = count + 1
         if count == len(list2): list1[e] = len(list2)
       #END LOOP
-    def exit(self):
-      print("checked!")
+    
     def divider(self):
       item = QtGui.QListWidgetItem()
       item.setSizeHint(QtCore.QSize(601,5))
