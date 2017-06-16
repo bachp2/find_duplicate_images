@@ -144,9 +144,9 @@ if __name__ == '__main__':
             list1[e] = count
             break
           else: count = count + 1
-        if count == len(list2): list1[e] = len(list2)
+        if count == len(list2): list1[e] = count
       #END LOOP
-    
+
     def divider(self):
       item = QtGui.QListWidgetItem()
       item.setSizeHint(QtCore.QSize(601,5))
