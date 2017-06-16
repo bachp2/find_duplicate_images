@@ -123,7 +123,7 @@ if __name__ == '__main__':
         if curr.checkState() == QtCore.Qt.Checked:
           checked_item_index.append(i)
         else: unchecked_item_index.append(i)
-      #-->testalgo
+      #-->testalgo.py
       self.indexing_help(checked_item_index, unchecked_item_index)
       #remove checked items with correct index
       for i in checked_item_index:
@@ -133,19 +133,15 @@ if __name__ == '__main__':
         self.listWidget.takeItem(i)
       #END METHOD
     def indexing_help(self, list1, list2):
-      count = 0
       ##BEGIN
+      count = 0
       for e in range(len(list1)):
-        for m in range(len(list2)):
-          if list1[e] < list2[m]:
+        while count < len(list2):
+          if list1[e] < list2[count]:
             list1[e] = count
             break
-          else: 
-            if count == len(list2)-1:
-              list1[e] = count+1
-              break
-            else: count = count+1
-        count = 0
+          else: count = count + 1
+        if count == len(list2): list1[e] = len(list2)
       #END LOOP
     def exit(self):
       print("checked!")

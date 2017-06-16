@@ -9,19 +9,18 @@ list2 = [0,3,4,5,9,10,13]
 # well as unchecked items, thus, the item's new position will tend to the closest uncheckable items (lower in index) relative to the 
 # item's current position.
 
+#todo replace old algo with optimized algo 
 if __name__ == '__main__':
 	count = 0
 	for e in range(len(list1)):
-		for m in range(len(list2)):
-			if list1[e] < list2[m]:
+		while count < len(list2):
+			if list1[e] < list2[count]:
 				list1[e] = count
 				break
-			else: 
-				if count == len(list2)-1:
-					list1[e] = count+1
-					break
-				count = count+1
-		count = 0
+			else:
+				count = count + 1
+		if count == len(list2):
+				list1[e] = len(list2)
 	print(list1)
 
 	#[1, 1, 4, 4, 4, 6, 6, 7, 7]
