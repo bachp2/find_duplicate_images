@@ -61,13 +61,13 @@ if __name__ == '__main__':
              #grouping images with similar hash
              images.setdefault(imghash, []).append(path_to_file)
 
-  print("printing output...")#finish output to console
+  print("printing output...")#finishes output to console
 
   img_set = {k: v for k, v in images.items() if v.__len__() > 1}
   
   out = ""
   
-  #print list to console
+  #prints list to console
   for key, img_list in img_set.items():
       out+="\n"
       length = img_list.__len__()
@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
   #Class for GUI
   class Window(QtGui.QMainWindow, Ui_Window):
-    #set item to path file
+    #sets item to path file
     path_2_item = {}
     def __init__(self):
       super(Window,self).__init__()
@@ -134,6 +134,7 @@ if __name__ == '__main__':
         os.remove(self.path_2_item[str(curr)])
         self.listWidget.takeItem(i)
       #END METHOD
+
     def indexing_help(self, list1, list2):
       ##BEGIN
       count = 0
@@ -146,6 +147,7 @@ if __name__ == '__main__':
         if count == len(list2): list1[e] = count
       #END LOOP
 
+    #divider line between each group of images
     def divider(self):
       item = QtGui.QListWidgetItem()
       item.setSizeHint(QtCore.QSize(601,5))
@@ -156,13 +158,16 @@ if __name__ == '__main__':
       frame.setFrameShadow(QtGui.QFrame.Raised)
       frame.setLineWidth(2)
       self.listWidget.setItemWidget(item, frame)
-      
+    
+    #execute function
     def run():
       app = QtGui.QApplication(sys.argv)
+      #message box shows warning
       msg_box = QtGui.QMessageBox()
       msg_box.setText("Check for any false positives before deleting!")
       msg_box.setWindowTitle("Warning")
       msg_box.show()
+      
       GUI = Window()
       sys.exit(app.exec_())
       #adds item to ListWidget
