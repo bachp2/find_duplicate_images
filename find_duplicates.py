@@ -40,6 +40,9 @@ if __name__ == '__main__':
                       choices=['ahash','phash','dhash','whash-haar','whash-db4'],
                       default='dhash', 
                       help='method of image hashing')
+
+  parser.add_argument('-r','--recursive', action='store_true',help='recursive search through sub-directories')
+
   args = parser.parse_args()
   #extension names
   ext = [".png", ".jpg", ".jpeg", ".bmp", ".gif"] #file extensions
@@ -55,11 +58,13 @@ if __name__ == '__main__':
 
   for root, dirs, files in os.walk(args.path):
     for file in files:
+        path_to_file = os.path.join(root, file)
         if file.endswith(tuple(ext)):
-             path_to_file = os.path.join(root, file)
              imghash = args.hashing(Image.open(path_to_file))
              #grouping images with similar hash
              images.setdefault(imghash, []).append(path_to_file)
+    if not args.recursive: break
+    #stop if there is no recursive search argument
 
   print("printing output...")#finishes output to console
 
