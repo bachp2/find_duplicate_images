@@ -146,7 +146,7 @@ def hashing_image(path_to_file, func, dict):
     #print(imghash)
     with lock:
       #dict.setdefault(imghash, []).append(path_to_file)
-      dict[imghash] = dict.get(imghash, []) + [path_to_file]
+      dict[str(imghash)] = dict.get(str(imghash), []) + [path_to_file]
     #@test print(images)
     return dict
 
@@ -206,10 +206,16 @@ if __name__ == '__main__':
   pool.join()
   
   print("printing output...")#finishes output to console
+
   #print(temp_list)
   #print(images)
+  
+  for k, v in images.items():
+    if type(v) is not bool:
+      if v.__len__() > 1:
+        print(v)
 
-  img_set = {k: v for k, v in images.items() if v.__len__() > 1}
+  img_set = {k: v for k, v in images.items() if type(v) is not bool and v.__len__() > 1}
   #print(img_set)
   out = ""
   
