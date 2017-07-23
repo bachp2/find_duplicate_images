@@ -4,7 +4,7 @@
 '''
 MIT License
 
-Copyright (c) 2017 
+Copyright (c) 2017 bachp2
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
+__author__ = "Bach Phan <bachp2@guw.edu>"
+__copyright__ = "Copyright 2004-2017 Bach Phan"
+__license__ = "MIT"
+__version__ = '1.0.0'
+__date__ = "2017-07-22"
 
 import os, sys
 import imagehash
@@ -165,10 +170,10 @@ def isNotEmpty(s):
   return bool(str(s) and str(s).strip())
 
 def hashing_image(path_to_file, func, dict):
-    imghash = func(Image.open(path_to_file))
+    imghash = str(func(Image.open(path_to_file)))
     #print(imghash)
     #dict.setdefault(imghash, []).append(path_to_file)
-    dict[str(imghash)] = dict.get(str(imghash), []) + [path_to_file]
+    dict[imghash] = dict.get(imghash, []) + [path_to_file]
     #@test print(images)
     return dict
 
