@@ -7,7 +7,8 @@ from PIL import Image #update to 3.6.1 to run properly
 from PyQt4 import QtGui, QtCore 
 from gui_widget import Ui_Window
 from itertools import repeat
-from multiprocessing import Pool, freeze_support, Manager, Lock
+from multiprocessing import Pool, freeze_support, Manager
+
 
 class FullPaths(argparse.Action):
     """Expand user- and relative-paths"""
@@ -18,10 +19,7 @@ class FullPaths(argparse.Action):
 
 #Class for GUI
 class Window(QtGui.QMainWindow, Ui_Window):
-  try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-  except AttributeError:
-    _fromUtf8 = lambda s: s
+  
 
   #sets item to path file
   path_2_item = {}
@@ -30,9 +28,19 @@ class Window(QtGui.QMainWindow, Ui_Window):
     self.setupUi(self)
     self.listWidget.setViewMode(QtGui.QListView.IconMode)
     self.listWidget.setIconSize(QtCore.QSize(42,48))
+    #message box shows warning
+    self.msg_box = QtGui.QMessageBox()
+    self.msg_box.setText("Check for any false positives before deleting!")
+    self.msg_box.setWindowTitle("Warning")
+    self.msg_box.show()
     self.home()
 
   def home(self):
+    try:
+      _fromUtf8 = QtCore.QString.fromUtf8
+    except AttributeError:
+      _fromUtf8 = lambda s: s
+
     for key, img_list in img_set.items():
       for i in range(len(img_list)):
         item = QtGui.QListWidgetItem()
@@ -101,12 +109,6 @@ class Window(QtGui.QMainWindow, Ui_Window):
   #execute function
   def run():
     app = QtGui.QApplication(sys.argv)
-    #message box shows warning
-    msg_box = QtGui.QMessageBox()
-    msg_box.setText("Check for any false positives before deleting!")
-    msg_box.setWindowTitle("Warning")
-    msg_box.show()
-    
     GUI = Window()
     sys.exit(app.exec_())
       #adds item to ListWidget
@@ -136,17 +138,11 @@ class DictAction(argparse.Action):
 def isNotEmpty(s):
   return bool(str(s) and str(s).strip())
 
-def dict_get(dict, *args):
-  dict.get(*args)
-
-lock = Lock()
-
 def hashing_image(path_to_file, func, dict):
     imghash = func(Image.open(path_to_file))
     #print(imghash)
-    with lock:
-      #dict.setdefault(imghash, []).append(path_to_file)
-      dict[str(imghash)] = dict.get(str(imghash), []) + [path_to_file]
+    #dict.setdefault(imghash, []).append(path_to_file)
+    dict[str(imghash)] = dict.get(str(imghash), []) + [path_to_file]
     #@test print(images)
     return dict
 
@@ -154,7 +150,7 @@ def hashing_image(path_to_file, func, dict):
 if __name__ == '__main__':
   
   freeze_support()
-  pool = Pool()
+  
 
   #descripton
   parser = argparse.ArgumentParser(description='find duplicate images in a specified directory')
@@ -199,9 +195,14 @@ if __name__ == '__main__':
     #stop if there is no recursive search argument
 
   #images = {}
+  pool = Pool()
+
   manager = Manager()
-  images = manager.dict(lock=True) #store every duplicates images in the directory, then group images with similar hash into the same list
+
+  images = manager.dict() #store every duplicates images in the directory, then group images with similar hash into the same list
+
   pool.starmap(hashing_image, zip( temp_list, repeat(args.hashing), repeat(images) ) )
+  
   pool.close()
   pool.join()
   
@@ -209,14 +210,15 @@ if __name__ == '__main__':
 
   #print(temp_list)
   #print(images)
-  
-  for k, v in images.items():
-    if type(v) is not bool:
-      if v.__len__() > 1:
-        print(v)
 
-  img_set = {k: v for k, v in images.items() if type(v) is not bool and v.__len__() > 1}
+  #for k, v in images.items():
+  #  if type(v) is not bool:
+  #    if v.__len__() > 1:
+  #      print(v)
+
+  img_set = {k: v for k, v in images.items() if v.__len__() > 1}
   #print(img_set)
+  
   out = ""
   
   #prints list to console
