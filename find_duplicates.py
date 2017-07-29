@@ -38,7 +38,7 @@ from PIL import Image #update to 3.6.1 to run properly
 from PyQt4 import QtGui, QtCore 
 from gui_widget import Ui_Window
 from itertools import repeat
-from multiprocessing import Pool, freeze_support, Manager, Lock, current_process, Queue
+from multiprocessing import Pool, freeze_support, Manager, Lock, current_process
 
 
 class FullPaths(argparse.Action):
@@ -168,8 +168,6 @@ class DictAction(argparse.Action):
 '''
 def isNotEmpty(s):
   return bool(str(s) and str(s).strip())
-
-
 
 lock = Lock()
 
