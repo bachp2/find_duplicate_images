@@ -38,7 +38,7 @@ from PIL import Image #update to 3.6.1 to run properly
 from PyQt4 import QtGui, QtCore 
 from gui_widget import Ui_Window
 from itertools import repeat
-from multiprocessing import Pool, freeze_support, Manager
+from multiprocessing import Pool, freeze_support, Manager, Lock, current_process, Queue
 
 
 class FullPaths(argparse.Action):
@@ -169,22 +169,30 @@ class DictAction(argparse.Action):
 def isNotEmpty(s):
   return bool(str(s) and str(s).strip())
 
+lock = Lock()
 def hashing_image(path_to_file, func, dict):
+  with lock:
     imghash = str(func(Image.open(path_to_file)))
-    #print(imghash)
+    print(imghash)
+    print("hashing done by {}!".format(current_process()))
     #dict.setdefault(imghash, []).append(path_to_file)
+    print()
     dict[imghash] = dict.get(imghash, []) + [path_to_file]
+    print(path_to_file)
+    print("dict append by {}".format(current_process()))
+    print()
+    print(dict)
     #@test print(images)
-    return dict
+  return dict
 
 
 if __name__ == '__main__':
   
   freeze_support()
   
-
   #descripton
   parser = argparse.ArgumentParser(description='find duplicate images in a specified directory')
+
   #arguments
   parser.add_argument('path',
                       action=FullPaths,
@@ -200,6 +208,7 @@ if __name__ == '__main__':
   parser.add_argument('-r','--recursive', action='store_true',help='recursive search through sub-directories')
 
   args = parser.parse_args()
+  
   #extension names
   ext = [".png", ".jpg", ".jpeg", ".bmp", ".gif"] #file extensions
   
@@ -213,7 +222,9 @@ if __name__ == '__main__':
   
 
   print("hashing images...")#signal to the console
-
+  
+  ts = time.clock()
+  
   for root, dirs, files in os.walk(args.path):
     for file in files:
         if file.endswith(tuple(ext)):
@@ -225,30 +236,35 @@ if __name__ == '__main__':
     if not args.recursive: break
     #stop if there is no recursive search argument
 
-  #images = {}
+  te = time.clock()
+  
+  print("finished appending images in {:.2f} millisec".format((te-ts)*1000))
+  
+  ts = time.clock()
+
   pool = Pool()
 
   manager = Manager()
 
   images = manager.dict() #store every duplicates images in the directory, then group images with similar hash into the same list
+  mp_list = manager.list(temp_list)
+  
+  with pool:
+    pool.starmap_async(hashing_image, zip( mp_list, repeat(args.hashing), repeat(images) ) )
+    pool.close()
+    pool.join()
+  
 
-  pool.starmap(hashing_image, zip( temp_list, repeat(args.hashing), repeat(images) ) )
-  
-  pool.close()
-  pool.join()
-  
+  te = time.clock()
+
+  print("finished hashing images in {:.2f} millisec".format((te-ts)*1000))
   print("printing output...")#finishes output to console
 
   #print(temp_list)
-  #print(images)
-
-  #for k, v in images.items():
-  #  if type(v) is not bool:
-  #    if v.__len__() > 1:
-  #      print(v)
-
+  print(images)
+  print()
   img_set = {k: v for k, v in images.items() if v.__len__() > 1}
-  #print(img_set)
+  print(img_set)
   
   out = ""
   
