@@ -169,21 +169,25 @@ class DictAction(argparse.Action):
 def isNotEmpty(s):
   return bool(str(s) and str(s).strip())
 
+
+
 lock = Lock()
-def hashing_image(path_to_file, func, dict):
+
+def hashing_image(path_to_file, func, l):
   with lock:
     imghash = str(func(Image.open(path_to_file)))
-    print(imghash)
-    print("hashing done by {}!".format(current_process()))
+    tup = (imghash, path_to_file)
+    l.append(tup)
+    #print(imghash)
+    #print("hashing done by {}!".format(current_process()))
     #dict.setdefault(imghash, []).append(path_to_file)
-    print()
-    dict[imghash] = dict.get(imghash, []) + [path_to_file]
-    print(path_to_file)
-    print("dict append by {}".format(current_process()))
-    print()
-    print(dict)
+    #print()
+    #print(path_to_file)
+    #print("dict append by {}".format(current_process()))
+    #print()
+    #print(dict)
     #@test print(images)
-  return dict
+  return l
 
 
 if __name__ == '__main__':
@@ -211,19 +215,18 @@ if __name__ == '__main__':
   
   #extension names
   ext = [".png", ".jpg", ".jpeg", ".bmp", ".gif"] #file extensions
-  
+
   temp_list = []
-  
+
   import time
 
   ##################################
-  start = time.time()#start counting
+  start = time.clock()#start counting
   ##################################
   
 
   print("hashing images...")#signal to the console
   
-  ts = time.clock()
   
   for root, dirs, files in os.walk(args.path):
     for file in files:
@@ -236,35 +239,29 @@ if __name__ == '__main__':
     if not args.recursive: break
     #stop if there is no recursive search argument
 
-  te = time.clock()
-  
-  print("finished appending images in {:.2f} millisec".format((te-ts)*1000))
-  
-  ts = time.clock()
-
   pool = Pool()
 
   manager = Manager()
-
-  images = manager.dict() #store every duplicates images in the directory, then group images with similar hash into the same list
-  mp_list = manager.list(temp_list)
+  mp_list = manager.list()
   
+  #print(temp_list.__len__())
   with pool:
-    pool.starmap_async(hashing_image, zip( mp_list, repeat(args.hashing), repeat(images) ) )
+    pool.starmap(hashing_image, zip( (x for x in temp_list), repeat(args.hashing) , repeat(mp_list) ) )
     pool.close()
     pool.join()
+  #print(mp_list.__len__())
   
+  images = {} #store every duplicates images in the directory, then group images with similar hash into the same list
+  for tup in mp_list:
+    images.setdefault(tup[0], []).append(tup[1])
 
-  te = time.clock()
-
-  print("finished hashing images in {:.2f} millisec".format((te-ts)*1000))
   print("printing output...")#finishes output to console
 
   #print(temp_list)
-  print(images)
+  #print(images)
   print()
   img_set = {k: v for k, v in images.items() if v.__len__() > 1}
-  print(img_set)
+  #print(img_set)
   
   out = ""
   
@@ -281,9 +278,9 @@ if __name__ == '__main__':
   if isNotEmpty(out):
     print(out)
     print()
-    print("done in {0:.2f}s".format(time.time() - start))
+    print("done in {0:.2f}s".format(time.clock() - start))
     Window.run()
   else: 
     print("no duplicates found")
-    print("done in {0:.2f}s".format(time.time() - start))
+    print("done in {0:.2f}s".format(time.clock() - start))
     quit()
