@@ -40,7 +40,6 @@ from gui_widget import Ui_Window
 from itertools import repeat
 from multiprocessing import Pool, freeze_support, Manager, Lock, current_process
 
-
 class FullPaths(argparse.Action):
     """Expand user- and relative-paths"""
     def __call__(self, parser, namespace, values, option_string=None):
@@ -173,18 +172,9 @@ lock = Lock()
 
 def hashing_image(path_to_file, func, l):
   with lock:
-    imghash = str(func(Image.open(path_to_file)))
+    imghash = func(Image.open(path_to_file)).__str__()
     tup = (imghash, path_to_file)
     l.append(tup)
-    #print(imghash)
-    #print("hashing done by {}!".format(current_process()))
-    #dict.setdefault(imghash, []).append(path_to_file)
-    #print()
-    #print(path_to_file)
-    #print("dict append by {}".format(current_process()))
-    #print()
-    #print(dict)
-    #@test print(images)
   return l
 
 
